@@ -48,13 +48,13 @@ dphi_RF = [0, 0*np.pi]
 epsn_z = 3.8
 zcut = 0.1500 * 2
 
-# 400 MHz
-V_RF = [16e6, 0*8e6]
-h_RF = [35640, 71280]
-dphi_RF = [0, 0*np.pi]
-epsn_z = 2.5
-zcut = 0.0810 * 2
-# zcut = 0.0755 * 2
+# # 400 MHz
+# V_RF = [16e6, 0*8e6]
+# h_RF = [35640, 71280]
+# dphi_RF = [0, 0*np.pi]
+# epsn_z = 2.5
+# zcut = 0.0810 * 2
+# # zcut = 0.0755 * 2
 
 
 V, h, phi = V_RF[0], h_RF[0], dphi_RF[0]
@@ -100,19 +100,18 @@ A = quad(eqH(phi_c), -phi_c, +phi_c)
 print A
 
 # COMPARE BUCKETS
-print "\nEmittance 1: {:g}".format(rfbucket.emittance_sp(z=zcut))
+print "\nBucket area 1: {:g}".format(rfbucket.emittance_single_particle())
+print "Emittance 1: {:g}".format(rfbucket.emittance_single_particle(z=zcut))
 print "Emittance 2: {:g}".format(2*A[0]/e/h)
 print "Emittance Gauss: {:g}".format(4*np.pi * (zcut/2.)**2 * Qs/eta/R * p0/e)
-# print "Bucket area 1: {:g}".format(rfbucket.emittance_sp())
 
+print "\nBunch length for an emittance of {:g} eVs: {:g} cm".format(
+    epsn_z, rfbucket.bunchlength_single_particle(epsn_z))
 
 print "\nCanonically conjugate pair 1: z={:1.2e}, dp/p={:1.2e}".format(
     zcut/2., rfbucket.dp_max(zcut)/2.)
 print "Canonically conjugate pair 2: z={:1.2e}, dp/p={:1.2e}".format(
     zcut/2., eqH(phi_c)(0)*omega0/E0/beta**2/2.)
-
-
-wurstel
 
 
 # PLOT BUCKETS
@@ -127,8 +126,8 @@ hh = rfbucket.hamiltonian
 
 ZZ, PP = np.meshgrid(zz, pp)
 PH, EE = h*ZZ/R, PP*E0*beta**2
-print "\nHmax 1: {:e}".format(np.max(hh(ZZ, PP)))
-print "\nHmax 2: {:e}".format(np.max(hamiltonian(PH, EE)*omega0))
+# print "\nHmax 1: {:e}".format(np.max(hh(ZZ, PP)))
+# print "\nHmax 2: {:e}".format(np.max(hamiltonian(PH, EE)*omega0))
 
 ax1.contourf(ZZ, PP, hh(ZZ, PP), 10, cmap=plt.cm.viridis)
 ax1.contour(ZZ, PP, hh(ZZ, PP), levels=[hh(rfbucket.zright, 0), hh(zcut, 0)],
